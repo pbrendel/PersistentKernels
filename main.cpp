@@ -1,34 +1,16 @@
-/*
- * File:   main.cpp
- * Author: Piotr Brendel
- */
-
-#include <iostream>
-#include <vector>
-#include <set>
-
-#include "HomologyTraits.hpp"
-#include "Persistence.hpp"
-#include "KernelsPersistence.hpp"
-#include "LocalKernelsPersistence.hpp"
-#include "LocalKernels.hpp"
-
-#include "Noise.hpp"
-#include "Domain.hpp"
-#include "Map.hpp"
-#include "HorseshoeMap.hpp"
-
-#include "MapSupplier.hpp"
+// pbrendel (c) 2013-21
 
 #include "Tests.h"
+#include "Core/perfCounter.h"
 
-#include <ctime>
+#include <iostream>
 
-int main(int argc, char *argv[])
+int main( int argc, char *argv[] )
 {
-    time_t t = time(0);
-    Tests::DoTest(argc, argv);
-    std::cout<<"finished in "<<(time(0) - t)<<" seconds"<<std::endl;
+    PerfCounter pc;
+    pc.Reset();
+    Tests::Run( argc, argv );
+    std::cout << "finished in " << pc.Reset() << " seconds" << std::endl;
 
     return 0;
 }

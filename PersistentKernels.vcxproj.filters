@@ -1,0 +1,139 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Python">
+      <UniqueIdentifier>{f268a85c-5f07-4a41-b332-85f4e74e2fff}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Homology">
+      <UniqueIdentifier>{36320e82-d8eb-4efe-b32f-47d1a7ce4d46}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Data">
+      <UniqueIdentifier>{b63107c8-b6f4-4c99-b03b-b09a4878d159}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Maps">
+      <UniqueIdentifier>{fdd753ca-cbc4-4e23-b002-4b5243e4d9fb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Main">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Homology\Persistence">
+      <UniqueIdentifier>{e87b461a-6a55-4059-a57f-b80a51cae892}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Homology\Complex">
+      <UniqueIdentifier>{c9b61572-a7bc-4520-9574-fbb5d9c18d2d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Utils">
+      <UniqueIdentifier>{e681e398-f002-443b-b0ae-00798fb4ee32}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="interval.h">
+      <Filter>Data</Filter>
+    </ClInclude>
+    <ClInclude Include="point.h">
+      <Filter>Data</Filter>
+    </ClInclude>
+    <ClInclude Include="cube.h">
+      <Filter>Data</Filter>
+    </ClInclude>
+    <ClInclude Include="noise.h">
+      <Filter>Data</Filter>
+    </ClInclude>
+    <ClInclude Include="domain.h">
+      <Filter>Maps</Filter>
+    </ClInclude>
+    <ClInclude Include="exitSetQuotientMetrics.h">
+      <Filter>Maps</Filter>
+    </ClInclude>
+    <ClInclude Include="metrics.h">
+      <Filter>Maps</Filter>
+    </ClInclude>
+    <ClInclude Include="tests.h">
+      <Filter>Main</Filter>
+    </ClInclude>
+    <ClInclude Include="map.h">
+      <Filter>Maps</Filter>
+    </ClInclude>
+    <ClInclude Include="horseshoeMap.h">
+      <Filter>Maps</Filter>
+    </ClInclude>
+    <ClInclude Include="ripsComplex.h">
+      <Filter>Homology\Complex</Filter>
+    </ClInclude>
+    <ClInclude Include="simplexSet.h">
+      <Filter>Homology\Complex</Filter>
+    </ClInclude>
+    <ClInclude Include="qualityFunction.h">
+      <Filter>Homology\Persistence</Filter>
+    </ClInclude>
+    <ClInclude Include="persistenceData.h">
+      <Filter>Homology\Persistence</Filter>
+    </ClInclude>
+    <ClInclude Include="localKernelsPersistence.h">
+      <Filter>Homology\Persistence</Filter>
+    </ClInclude>
+    <ClInclude Include="dataWriter.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="main.cpp">
+      <Filter>Main</Filter>
+    </ClCompile>
+    <ClCompile Include="cube.cpp">
+      <Filter>Data</Filter>
+    </ClCompile>
+    <ClCompile Include="noise.cpp">
+      <Filter>Data</Filter>
+    </ClCompile>
+    <ClCompile Include="domain.cpp">
+      <Filter>Maps</Filter>
+    </ClCompile>
+    <ClCompile Include="exitSetQuotientMetrics.cpp">
+      <Filter>Maps</Filter>
+    </ClCompile>
+    <ClCompile Include="metrics.cpp">
+      <Filter>Maps</Filter>
+    </ClCompile>
+    <ClCompile Include="tests.cpp">
+      <Filter>Main</Filter>
+    </ClCompile>
+    <ClCompile Include="map.cpp">
+      <Filter>Maps</Filter>
+    </ClCompile>
+    <ClCompile Include="horseshoeMap.cpp">
+      <Filter>Maps</Filter>
+    </ClCompile>
+    <ClCompile Include="ripsComplex.cpp">
+      <Filter>Homology\Complex</Filter>
+    </ClCompile>
+    <ClCompile Include="simplexSet.cpp">
+      <Filter>Homology\Complex</Filter>
+    </ClCompile>
+    <ClCompile Include="point.cpp">
+      <Filter>Data</Filter>
+    </ClCompile>
+    <ClCompile Include="qualityFunction.cpp">
+      <Filter>Homology\Persistence</Filter>
+    </ClCompile>
+    <ClCompile Include="persistenceData.cpp">
+      <Filter>Homology\Persistence</Filter>
+    </ClCompile>
+    <ClCompile Include="localKernelsPersistence.cpp">
+      <Filter>Homology\Persistence</Filter>
+    </ClCompile>
+    <ClCompile Include="dataWriter.cpp">
+      <Filter>Utils</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="persistence_quality.py">
+      <Filter>Python</Filter>
+    </None>
+  </ItemGroup>
+</Project>
