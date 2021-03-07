@@ -15,6 +15,8 @@ public:
     ExitSetQuotientMetrics( const Domain &domain, const Map &map, const Metrics& innerMetrics );
 
     virtual double GetDistance( const Point &x, const Point &y, uint, uint ) const override;
+    virtual bool HasIndexMetrics() const override { return true; }
+    virtual o::Ptr<IndexMetrics> CreateIndexMetrics( const PointsList &points ) const override;
 
     double GetDistanceToExitSet( const Point &p ) const;
 

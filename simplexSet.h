@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include "Core/ptr.h"
+#include "Core/dynBuffer.h"
 #include "Core/types.h"
 
 class SimplexSet;
@@ -66,6 +66,11 @@ public:
 		return m_size;
 	}
 
+	uint GetCapacity() const
+	{
+		return m_labels.GetSize() / ( m_dim + 1 );
+	}
+
 	Simplex PushBack();
 	void PopBack();
 	void Remove( uint index );
@@ -80,9 +85,8 @@ private:
 	uint GetSimplexOffset( uint index ) const;
 	void Resize();
 
-	o::Ptr<Label> m_labels;
+	o::DynBuffer<Label> m_labels;
 	uint m_dim;
-	uint m_capacity;
 	uint m_size;
 	bool m_dirty;
 

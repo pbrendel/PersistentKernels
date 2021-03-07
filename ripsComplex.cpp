@@ -25,6 +25,7 @@ void RipsComplex::Create( const PointsList &points, const Metrics &metrics, doub
     }
     AssignLabels();
     CreateEdges( metrics, epsilon );
+    m_ccRepresentative.Clear();
 }
 
 
@@ -131,13 +132,15 @@ void RipsComplex::CreateEdges( const Metrics &metrics, double epsilon )
     m_edges.Init( 1, m_vertsCount * 4 );
     o::DynBuffer<uint> vertDegree( m_vertsCount );
     vertDegree.Clear();
+    o::DynBuffer<uint> firstNonChecked( m_vertsCount );
+    firstNonChecked.Clear();
 
     // Chech for connectibity within each group of distance no greater than 'epsilon'
     uint start = 0;
     while ( start < m_vertsCount )
     {
         const double d = vertsRefDist[start].m_distance;
-        uint end = start + 1;
+        uint end = (std::max)( start + 1, firstNonChecked[start] );
         while ( end < m_vertsCount && vertsRefDist[end].m_distance == d )
         {
             end++;
@@ -153,7 +156,7 @@ void RipsComplex::CreateEdges( const Metrics &metrics, double epsilon )
             {
                 const uint indexI = vertsRefDist[i].m_index;
                 const Vertex &v = m_verts[indexI];
-                for ( uint j = i + 1; j < end; ++j )
+                for ( uint j = (std::max)( i + 1, firstNonChecked[i] ); j < end; ++j )
                 {
                     const uint indexJ = vertsRefDist[j].m_index;
                     if ( metrics.GetDistance( *v.m_point, *m_verts[indexJ].m_point, indexI, indexJ ) <= epsilon )
@@ -165,6 +168,7 @@ void RipsComplex::CreateEdges( const Metrics &metrics, double epsilon )
                         m_vertexDegree = (std::max)( m_vertexDegree, ++vertDegree[indexJ] );
                     }
                 }
+                firstNonChecked[i] = end;
             }
         }
         start = endGroup;
@@ -174,7 +178,12 @@ void RipsComplex::CreateEdges( const Metrics &metrics, double epsilon )
 
 void RipsComplex::CreateConnectedComponents()
 {
-    // Create "reverse neighbours" map
+    m_ccRepresentative.Clear();
+    for ( uint i = 0; i < m_vertsCount; ++i )
+    {
+        m_verts[i].m_ccIndex = O_INVALID_INDEX;
+    }
+
     SimplexSet neighbours( m_vertexDegree, m_vertsCount );
     neighbours.Resize( m_vertsCount );
     o::DynBuffer<uint> neighboursCount( m_vertsCount );
@@ -214,7 +223,7 @@ void RipsComplex::CreateConnectedComponents()
             const uint count = neighboursCount[q.Front()];
             for ( uint d = 0; d < count; ++d )
             {
-                const uint v = static_cast<uint>( n[d++] );
+                const uint v = static_cast<uint>( n[d] );
                 if ( verts[v].m_ccIndex == O_INVALID_INDEX )
                 {
                     verts[v].m_ccIndex = newCcIndex;

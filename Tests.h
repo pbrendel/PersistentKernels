@@ -30,6 +30,11 @@ public:
     o::Ptr<QualityFunction> CreateQualityFunction() const;
     void CreateEpsilons( o::DynArray<double> &outEpsilons ) const;
 
+    constexpr uint GetAlgorithmId() const
+    {
+        return m_algorithmId;
+    }
+
     constexpr uint GetDomainDim() const
     {
         if ( m_mapType == MapType::Linear1d || m_mapType == MapType::Translation1d ) return 1;
@@ -106,6 +111,8 @@ private:
     void ParseMetrics( std::istream &stream );
     void ParseTest( std::istream &stream );
     void ParseEpsilons( std::istream &stream );
+
+    uint m_algorithmId;
 
     DomainType m_domainType;
     uint m_domainSize;

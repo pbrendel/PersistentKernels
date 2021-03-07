@@ -42,40 +42,38 @@ Label &Simplex::operator[]( uint index )
 ////////////////////////////////////////////////////////////////////////////////
 
 SimplexSet::SimplexSet()
-	: m_labels( nullptr )
-	, m_capacity( 0 )
-	, m_size( 0 )
+	: m_size( 0 )
 	, m_dirty( false )
 {}
 
 
 SimplexSet::SimplexSet( uint dim, uint capacity )
 	: m_dim( dim )
-	, m_capacity( capacity )
 	, m_size( 0 )
 	, m_dirty( false )
 {
-	assert( m_capacity > 0 );
-	const uint labelsSize = GetSimplexOffset( m_capacity );
-	m_labels = new Label[labelsSize];
-	std::fill_n( m_labels.Get(), labelsSize, INVALID_LABEL );
+	assert( capacity > 0 );
+	const uint labelsSize = GetSimplexOffset( capacity );
+	m_labels.Reset( labelsSize );
+	m_labels.Clear( INVALID_LABEL );
 }
 
 
 void SimplexSet::Init( uint dim, uint capacity )
 {
-	assert( m_capacity == 0 );
+	assert( capacity > 0 );
 	m_dim = dim;
-	m_capacity = capacity;
-	const uint labelsSize = GetSimplexOffset( m_capacity );
-	m_labels = new Label[labelsSize];
-	std::fill_n( m_labels.Get(), labelsSize, INVALID_LABEL );
+	m_size = 0;
 	m_dirty = false;
+	const uint labelsSize = GetSimplexOffset( capacity );
+	m_labels.Reset( labelsSize );
+	m_labels.Clear( INVALID_LABEL );
 }
 
 
 void SimplexSet::Resize( uint size )
 {
+	assert( size <= GetCapacity() );
 	m_size = size;
 }
 
@@ -88,7 +86,7 @@ uint SimplexSet::GetSimplexOffset( uint index ) const
 
 Simplex SimplexSet::PushBack()
 {
-	if ( m_size == m_capacity )
+	if ( m_size == GetCapacity() )
 	{
 		Resize();
 	}
@@ -132,13 +130,14 @@ ConstSimplex SimplexSet::operator[]( uint index ) const
 
 void SimplexSet::Resize()
 {
-	const uint newCapacity = m_capacity == 0 ? 2 : m_capacity * 2;
+	const uint capacity = GetCapacity();
+	const uint newCapacity = capacity == 0 ? 2 : capacity * 2;
 	const uint newLabelsSize = GetSimplexOffset( newCapacity );
-	const uint oldLabelsSize = GetSimplexOffset( m_capacity );
+	const uint oldLabelsSize = GetSimplexOffset( capacity );
 	Label *newLabels = new Label[newLabelsSize];
 	memcpy( newLabels, m_labels.Get(), oldLabelsSize * sizeof( Label ) );
-	m_labels = newLabels;
-	m_capacity = newCapacity;
+	std::fill_n( newLabels + oldLabelsSize, newLabelsSize - oldLabelsSize, INVALID_LABEL );
+	m_labels.Reset( newLabels, newLabelsSize );
 }
 
 

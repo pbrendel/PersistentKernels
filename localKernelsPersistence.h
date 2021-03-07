@@ -14,6 +14,13 @@ class LocalKernelsPersistence
 {
 public:
 
+    struct PointsProxy
+    {
+        PointsList m_domainPoints;
+        PointsList m_rangePoints;
+        PointsList m_graphPoints;
+    };
+
     static void Compute_Alg1( const Domain &domain, const Map &map, const Domain &testDomain, const o::DynArray<double> &epsilons, double restrictionRadius,
                               const Metrics &domainMetrics, const Metrics &graphMetrics, PersistenceData &outPersistenceData );
     static void Compute_Alg2( const Domain &domain, const Map &map, double alpha, double beta, const Metrics &domainMetrics, PersistenceData &outPersistenceData );
@@ -21,13 +28,6 @@ public:
 
 
 private:
-
-    struct PointsProxy
-    {
-        PointsList m_domainPoints;
-        PointsList m_rangePoints;
-        PointsList m_graphPoints;
-    };
 
     enum PointsCreateFlags : uint
     {

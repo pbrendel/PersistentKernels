@@ -20,6 +20,7 @@ public:
 
     RipsComplex( const PointsList &points, const Metrics &metrics, double epsilon, bool gluePoints );
 
+    void Create( const PointsList &points, const Metrics &metrics, double epsilon, bool gluePoints );
     void CreateConnectedComponents();
     uint GetConnectedComponentsNumber() const;
     void GetProjectionMap( const RipsComplex &rangeComplex, o::Map<uint, uint> &outProjection ) const;
@@ -45,7 +46,6 @@ public:
          double m_distance;
      };
 
-     void Create( const PointsList &points, const Metrics &metrics, double epsilon, bool gluePoints );
      void CreateVerts( const PointsList &points );
      o::DynBuffer<VertexRefDist> CalculateVertexReferenceDistance( const Metrics &metrics );
      void GluePoints( const Metrics &metrics );

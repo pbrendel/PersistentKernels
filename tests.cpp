@@ -21,11 +21,13 @@ using o::Ptr;
 
 TestParams::TestParams( const std::string &params )
 {
+    m_algorithmId = 1;
     m_domainType = TestParams::DomainType::Uniform;
     m_domainSize = 11;
     m_domainCube.SetDimension( 1 );
     m_domainCube[0] = Interval( 0, 1 );
     m_mapType = MapType::LinearDiscontinous;
+    m_mapParams.PushBack( 1.0 );
     m_noiseDelta = 0;
     m_metricsType = MetricsType::Default;
     m_testDomainType = DomainType::Random;
@@ -293,7 +295,11 @@ void TestParams::ParseParams( const std::string &params )
     std::istringstream stream( params );
     std::string str;
     stream >> str;
-    if ( str == "--domain" )
+    if ( str == "--alg" )
+    {
+        ParseUint( stream, m_algorithmId );
+    }
+    else if ( str == "--domain" )
     {
         ParseDomain( stream );
     }
@@ -538,6 +544,11 @@ void Tests::Run( int argc, char **argv )
 
 void Tests::RunSingle( const std::string &paramsString )
 {
+    if ( paramsString.empty() )
+    {
+        return;
+    }
+
     srand( static_cast<uint>( time( 0 ) ) );
 
     TestParams testParams( paramsString );
@@ -553,7 +564,16 @@ void Tests::RunSingle( const std::string &paramsString )
     testParams.CreateEpsilons( epsilons );
 
     PersistenceData persistenceData;
-    LocalKernelsPersistence::Compute_Alg1( *domain, *map, *testDomain, epsilons, testParams.GetRestrictionRadius(), *domainMetrics, *graphMetrics, persistenceData );
+    const uint algorithmId = testParams.GetAlgorithmId();
+    assertex( algorithmId == 1 || algorithmId == 2, "Not supported algorithm Id" );
+    if ( algorithmId == 1 )
+    {
+        LocalKernelsPersistence::Compute_Alg1( *domain, *map, *testDomain, epsilons, testParams.GetRestrictionRadius(), *domainMetrics, *graphMetrics, persistenceData );
+    }
+    else
+    {
+        LocalKernelsPersistence::Compute_Alg2( *domain, *map, testParams.GetAlpha(), testParams.GetBeta(), *domainMetrics, persistenceData );
+    }
 
     std::ofstream output( testParams.GetOutputFilename().c_str() );
     Ptr<QualityFunction> qualityFunction = testParams.CreateQualityFunction();

@@ -71,6 +71,12 @@ double ExitSetQuotientMetrics::GetDistance( const Point &x, const Point &y, uint
 }
 
 
+o::Ptr<IndexMetrics> ExitSetQuotientMetrics::CreateIndexMetrics( const PointsList &points ) const
+{
+    return new ExitSetQuotientIndexMetrics( points, *this );
+}
+
+
 double ExitSetQuotientMetrics::AddPoint( const Point &p, const Map &map )
 {
     if ( !m_domain.IsInDomain( p ) )

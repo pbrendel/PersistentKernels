@@ -26,7 +26,7 @@ public:
 
     virtual bool IsIndexMetrics() const { return false; }
     virtual bool HasIndexMetrics() const { return false; }
-    virtual o::Ptr<IndexMetrics> CreateIndexMetrics() const { return nullptr; }
+    virtual o::Ptr<IndexMetrics> CreateIndexMetrics( const PointsList &points ) const { return nullptr; }
     virtual void ResetIndexMetrics( const PointsList &points ) { assertex( false, "Not implemented" ); }
 };
 
