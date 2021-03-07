@@ -80,8 +80,9 @@ void UniformCubeWithHole::GetValue( uint index, Point &p ) const
 
 RandomCube::RandomCube( const Cube &cube, uint count, Noise *noise )
     : Domain( cube, noise )
-    , m_randoms( cube.GetDimension() *count )
+    , m_randoms( cube.GetDimension() * count )
 {
+    m_count = count;
     const uint size = m_randoms.GetSize();
     for ( uint i = 0; i < size; ++i )
     {

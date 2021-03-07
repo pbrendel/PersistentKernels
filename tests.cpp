@@ -36,10 +36,10 @@ TestParams::TestParams( const std::string &params )
     m_beta = 0.5;
     m_restrictionRadius = 0.2;
     m_qualityFunctionNumber = 1;
-    m_filename = "output.txt";
+    m_outputFilename = "output.txt";
 
     const char *separator = "--";
-    size_t separatorSize = 2;
+    const size_t separatorSize = strlen( separator );
     size_t prevIndex = params.find( separator );
     while ( prevIndex != std::string::npos )
     {
@@ -71,7 +71,7 @@ void TestParams::Print( std::ostream &str ) const
     str << "test domain " << static_cast<uint>( m_testDomainType ) << " " << m_testDomainSize << std::endl;
     str << "radius " << m_restrictionRadius << std::endl;
     str << "quality function: " << m_qualityFunctionNumber << std::endl;
-    str << "filename: " << m_filename << std::endl;
+    str << "output filename: " << m_outputFilename << std::endl;
 }
 
 
@@ -264,6 +264,18 @@ bool TestParams::ParseUint( std::istream &stream, uint &outValue ) const
 }
 
 
+bool TestParams::ParseBool( std::istream &stream, bool &outValue ) const
+{
+    int v;
+    if ( stream >> v )
+    {
+        outValue = v != 0;
+        return true;
+    }
+    return false;
+}
+
+
 bool TestParams::ParseString( std::istream &stream, std::string &outValue ) const
 {
     std::string v;
@@ -323,7 +335,11 @@ void TestParams::ParseParams( const std::string &params )
     }
     else if ( str == "--out" )
     {
-        ParseString( stream, m_filename );
+        ParseString( stream, m_outputFilename );
+    }
+    else if ( str == "--graph" )
+    {
+        ParseBool( stream, m_showGraph );
     }
 }
 
@@ -533,25 +549,28 @@ void Tests::RunSingle( const std::string &paramsString )
     Ptr<Metrics> domainMetrics = testParams.CreateMetrics( *domain, *map );
     Ptr<Metrics> graphMetrics = new MaxDomainRangeMetrics( *domainMetrics, *domainMetrics, domain->GetDimension(), map->GetDimension() );
     Ptr<Domain> testDomain = testParams.CreateTestDomain();
-    Ptr<QualityFunction> qualityFunction = testParams.CreateQualityFunction();
     DynArray<double> epsilons;
     testParams.CreateEpsilons( epsilons );
-
-    std::ofstream output( testParams.GetFilename().c_str() );
 
     PersistenceData persistenceData;
     LocalKernelsPersistence::Compute_Alg1( *domain, *map, *testDomain, epsilons, testParams.GetRestrictionRadius(), *domainMetrics, *graphMetrics, persistenceData );
 
+    std::ofstream output( testParams.GetOutputFilename().c_str() );
+    Ptr<QualityFunction> qualityFunction = testParams.CreateQualityFunction();
     qualityFunction->Init( persistenceData, epsilons.GetSize() );
     for ( PersistenceData::Iterator i = persistenceData.Begin(); i != persistenceData.End(); ++i )
     {
         i->ApplyMap( *map );
-        i->CalculateQuality( *qualityFunction );
-        
+        i->CalculateQuality( *qualityFunction );        
         output << *i;
     }
 
     output.close();
+
+    if ( testParams.GetShowGraph() )
+    {
+        ShowGraph( testParams.GetOutputFilename() );
+    }
 }
 
 
@@ -568,4 +587,13 @@ void Tests::RunList( const std::string &filename )
     {
         RunSingle( line );
     }
+}
+
+
+bool Tests::ShowGraph( const std::string &filename )
+{
+    char buff[256] = { 0 };
+    sprintf_s( buff, "python persistence_quality.py %s", filename.c_str() );
+    const int res = system( buff );
+    return res == 0;
 }

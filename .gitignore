@@ -5,4 +5,8 @@
 /PersistentKernels/.vs
 /.vs
 /x64/Debug
+/x64/Release
+/tests
 /PersistentKernels.vcxproj.user
+/PersistentKernels.args.json
+*.txt

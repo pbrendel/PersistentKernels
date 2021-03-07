@@ -54,6 +54,7 @@ public:
 	SimplexSet( uint dim, uint capacity );
 
 	void Init( uint dim, uint capacity );
+	void Resize( uint size );
 
 	uint GetDimension() const
 	{

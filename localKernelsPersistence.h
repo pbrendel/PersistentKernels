@@ -37,11 +37,6 @@ private:
         PCF_All     = PCF_Domain | PCF_Range | PCF_Graph,
     };
 
-    enum : uint
-    {
-        MAX_RIPS_DIMENSION = 1,
-    };
-
     static void CreatePoints( const Domain &domain, const Map &map, uint pcfFlags, PointsProxy &outPoints );
     static void FindEpsilons( const PointsList &graphPoints, const Metrics &metrics, double &prevEpsilon, double &epsilon, double alpha );
 };

@@ -105,14 +105,16 @@ void LocalKernelsPersistence::Compute_Alg1( const Domain &domain, const Map &map
         const uint epsilonsCount = epsilons.GetSize();
         for ( uint j = 0; j < epsilonsCount; ++j )
         {
-            RipsComplex ripsComplexDomain( domainPoints, domainMetrics, epsilons[j], MAX_RIPS_DIMENSION );
+            RipsComplex ripsComplexDomain( domainPoints, domainMetrics, epsilons[j], true );
             ripsComplexDomain.CreateConnectedComponents();
             const uint domainConnectedComponents = ripsComplexDomain.GetConnectedComponentsNumber();
-            RipsComplex ripsComplexGraph( graphPoints, graphMetrics, epsilons[j], MAX_RIPS_DIMENSION );
+
+            RipsComplex ripsComplexGraph( graphPoints, graphMetrics, epsilons[j], true );
             ripsComplexGraph.CreateConnectedComponents();
             const uint graphConnectedComponents = ripsComplexGraph.GetConnectedComponentsNumber();
 
             assert( graphConnectedComponents >= domainConnectedComponents );
+
             Projection projection;
             ripsComplexGraph.GetProjectionMap( ripsComplexDomain, projection );
             projections.PushBack( projection );

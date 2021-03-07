@@ -57,9 +57,14 @@ public:
         return m_restrictionRadius;
     }
 
-    const std::string &GetFilename() const
+    const std::string &GetOutputFilename() const
     {
-        return m_filename;
+        return m_outputFilename;
+    }
+
+    constexpr bool GetShowGraph() const
+    {
+        return m_showGraph;
     }
 
 private:
@@ -93,6 +98,7 @@ private:
     void CreateDomainCube( Cube &outCube ) const;
     bool ParseDouble( std::istream &stream, double &outValue ) const;
     bool ParseUint( std::istream &stream, uint &outValue ) const;
+    bool ParseBool( std::istream &stream, bool &outValue ) const;
     bool ParseString( std::istream &stream, std::string &outValue ) const;
     void ParseParams( const std::string &params );
     void ParseDomain( std::istream &stream );
@@ -121,7 +127,9 @@ private:
 
     uint m_qualityFunctionNumber;
 
-    std::string m_filename;
+    std::string m_outputFilename;
+
+    bool m_showGraph;
 };
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -136,4 +144,5 @@ private:
 
     static void RunSingle( const std::string &paramsString );
     static void RunList( const std::string &filename );
+    static bool ShowGraph( const std::string &filename );
 };

@@ -6,6 +6,7 @@
 #include "point.h"
 #include "Core/defs.h"
 #include "Core/dynArray.h"
+#include "Core/dynBuffer.h"
 #include "Core/map.h"
 
 class Metrics;
@@ -25,11 +26,6 @@ public:
 
  private:
 
-     enum : uint
-     {
-         MAX_VERTEX_DEGREE = 5,
-     };
-
      struct Vertex
      {
          const Point *m_point;
@@ -43,18 +39,24 @@ public:
          {}
      };
 
+     struct VertexRefDist
+     {
+         uint m_index;
+         double m_distance;
+     };
+
      void Create( const PointsList &points, const Metrics &metrics, double epsilon, bool gluePoints );
      void CreateVerts( const PointsList &points );
+     o::DynBuffer<VertexRefDist> CalculateVertexReferenceDistance( const Metrics &metrics );
      void GluePoints( const Metrics &metrics );
      void AssignLabels();
-     void CreateNeighbours( const Metrics &metrics, double epsilon );
-     void CreateEdges();
+     void CreateEdges( const Metrics &metrics, double epsilon );
 
-     o::Ptr<Vertex> m_verts;
+     o::DynBuffer<Vertex> m_verts;
      uint m_vertsCount;
      SimplexSet m_edges;
-     SimplexSet m_neighbours;
      o::DynArray<uint> m_ccRepresentative;
+     uint m_vertexDegree;
 
      friend class DataWriter;
 };

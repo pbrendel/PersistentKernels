@@ -4,6 +4,7 @@
 #include "Core/assert.h"
 #include "Core/defs.h"
 
+#include <algorithm>
 #include <cstring>
 
 
@@ -57,6 +58,7 @@ SimplexSet::SimplexSet( uint dim, uint capacity )
 	assert( m_capacity > 0 );
 	const uint labelsSize = GetSimplexOffset( m_capacity );
 	m_labels = new Label[labelsSize];
+	std::fill_n( m_labels.Get(), labelsSize, INVALID_LABEL );
 }
 
 
@@ -67,7 +69,14 @@ void SimplexSet::Init( uint dim, uint capacity )
 	m_capacity = capacity;
 	const uint labelsSize = GetSimplexOffset( m_capacity );
 	m_labels = new Label[labelsSize];
+	std::fill_n( m_labels.Get(), labelsSize, INVALID_LABEL );
 	m_dirty = false;
+}
+
+
+void SimplexSet::Resize( uint size )
+{
+	m_size = size;
 }
 
 
@@ -99,7 +108,6 @@ void SimplexSet::Remove( uint index )
 {
 	assert( m_size > 0 );
 	const uint offset = GetSimplexOffset( index );
-	assert( m_labels[offset] != INVALID_LABEL );
 	m_labels[offset] = INVALID_LABEL;
 	m_size--;
 	m_dirty |= ( index < m_size );
@@ -108,16 +116,16 @@ void SimplexSet::Remove( uint index )
 
 Simplex SimplexSet::operator[]( uint index )
 {
+	assert( index < m_size );
 	const uint offset = GetSimplexOffset( index );
-	assert( m_labels[offset] != INVALID_LABEL );
 	return Simplex( this, offset );
 }
 
 
 ConstSimplex SimplexSet::operator[]( uint index ) const
 {
+	assert( index < m_size );
 	const uint offset = GetSimplexOffset( index );
-	assert( m_labels[offset] != INVALID_LABEL );
 	return ConstSimplex( this, offset );
 }
 
@@ -143,20 +151,20 @@ void SimplexSet::MakeClean()
 	const uint totalSize = m_size * simplexSize;
 	while ( srcOffset < totalSize )
 	{
+		while ( srcOffset < totalSize && labels[srcOffset] == INVALID_LABEL )
+		{
+			srcOffset += simplexSize;
+		}
 		const uint srcOffsetBegin = srcOffset;
 		while ( srcOffset < totalSize && labels[srcOffset] != INVALID_LABEL )
 		{
-			srcOffset++;
+			srcOffset += simplexSize;
 		}
 		if ( srcOffsetBegin != dstOffset && srcOffsetBegin != srcOffset )
 		{
-			const uint toMove = ( srcOffset - srcOffsetBegin ) * simplexSize;
+			const uint toMove = ( srcOffset - srcOffsetBegin );
 			memmove( labels + dstOffset, labels + srcOffsetBegin, toMove );
 			dstOffset += toMove;
-		}
-		while ( srcOffset < totalSize && labels[srcOffset] == INVALID_LABEL )
-		{
-			srcOffset++;
 		}
 	}
 	m_size = dstOffset / simplexSize;
